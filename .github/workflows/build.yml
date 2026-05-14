@@ -220,20 +220,13 @@ jobs:
             type=raw,value=${{ needs.version-info.outputs.version }}
             type=raw,value=dev-latest
 
-      - name: Login to DockerHub
-        if: ${{ needs.version-info.outputs.release == 1 }}
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
       - name: Login to ghcr.io
         if: ${{ needs.version-info.outputs.release == 1 }}
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.ACCESS_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -357,7 +350,7 @@ jobs:
             webui/dist.zip
             backend/app-v${{ needs.version-info.outputs.version }}.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   telegram:
     runs-on: ubuntu-latest
